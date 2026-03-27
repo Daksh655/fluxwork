@@ -24,6 +24,23 @@ FluxWork follows a **Strict Layered Architecture** to ensure separation of conce
 3. **Repository Layer:** Manages data persistence using Spring Data JPA.
 4. **DTO Pattern:** Implemented for all inbound (`Request`) and outbound (`Response`) data to prevent entity leakage and improve security.
 
+**ASCII Architecture Diagram :**
+```text
+[ Client (Frontend/Postman) ]
+           |
+           v
+[ Controller (Auth/User) ] <--- [ Global Exception Handler ]
+           |
+           v
+[ Service Layer (Business Logic) ] <--- [ DTO Mapping ]
+           |
+           v
+[ Repository Layer (Spring Data JPA) ]
+           |
+           v
+[ PostgreSQL Database ]
+```
+
 ### Key Implementation Details:
 * **Global Exception Handling:** Centralized `@ControllerAdvice` for predictable and consistent API error responses.
 * **Standardized API Wrappers:** Every response follows a consistent `ApiResponse<T>` structure for seamless frontend integration.
