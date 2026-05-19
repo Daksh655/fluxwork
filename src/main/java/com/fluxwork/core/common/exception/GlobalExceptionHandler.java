@@ -10,11 +10,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ApiResponse<Object> handleGenericException(Exception ex) {
-
-        return new ApiResponse<>(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Something went wrong",
-                null
-        );
+        ex.printStackTrace();
+        return ApiResponse.error(ex.getMessage());
+//        return new ApiResponse<>(
+//
+//                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+//                "Something went wrong",
+//                null
+//      );
     }
 }

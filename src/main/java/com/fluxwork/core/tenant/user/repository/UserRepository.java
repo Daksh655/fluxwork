@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<UserEntity, Long> {  // this automatically gives you methods such as save(), findById(), findAll(), delete(), exists(), there is no need to write SQL
 
-    Optional<UserEntity> findByEmail(Long email);  // this auto generates a sql query ( SELECT * from user WHERE email = ? )
+    Optional<UserEntity> findByEmail(String email);  // this auto generates a sql query ( SELECT * from user WHERE email = ? )
 }
