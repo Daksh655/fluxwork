@@ -1,11 +1,11 @@
-POST http://localhost:8080/api/tasks
+GET http://localhost:8080/api/tasks
 Content-Type: application/json
 
 {
-  "title": "Build Login Page",
-  "description": "Create React login UI",
-  "status": "TODO",
-  "priority": "HIGH",
-  "deadline": "2026-04-10T18:00:00",
+  "title": "Updated Login Page",
+  "description": "Updated React login UI",
+  "status": "IN_PROGRESS",
+  "priority": "MEDIUM",
+  "deadline": "2026-05-01T18:00:00",
   "boardId": 2
 }
