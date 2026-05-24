@@ -1,7 +1,7 @@
-POST http://localhost:8080/api/boards
+GET http://localhost:8080/api/boards
 Content-Type: application/json
 
 {
-  "name": "Frontend Team",
-  "description": "Frontend sprint tasks"
+  "name": "Updated Frontend Team",
+  "description": "Updated board description"
 }
