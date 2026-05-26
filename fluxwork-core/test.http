@@ -1,0 +1,11 @@
+GET http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Updated Login Page",
+  "description": "Updated React login UI",
+  "status": "IN_PROGRESS",
+  "priority": "MEDIUM",
+  "deadline": "2026-05-01T18:00:00",
+  "boardId": 2
+}
