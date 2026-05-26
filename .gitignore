@@ -3,18 +3,20 @@
 *.iml
 
 # Node
+node_modules/
+dist/
+
+# React
 fluxwork-web/node_modules/
 fluxwork-web/dist/
 
 # Java
-fluxwork-core/target/
+target/
+*.class
 
-# Logs
-*.log
+# Environment
+.env
 
-# OS
+# OS files
 .DS_Store
 Thumbs.db
-
-/mvnw text eol=lf
-*.cmd text eol=crlf
