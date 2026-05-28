@@ -27,6 +27,7 @@ public class TaskEntity {
 
     private String priority;
 
+    @Column(name = "deadline")
     private LocalDateTime deadline;
 
     private LocalDateTime createdAt;

@@ -1,54 +1,37 @@
-function Navbar({ user }) {
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-    const handleLogout = () => {
-
-        localStorage.removeItem("user");
-
-        window.location.href = "/login";
-    };
+function Navbar() {
+    const { user, logout } = useContext(AuthContext);
 
     return (
+        <header className="h-20 flex items-center justify-between px-8 border-b border-gray-800 bg-gray-950/50 backdrop-blur-md">
 
-        <div className="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
-
-            {/* Logo */}
+            {/* Left Side: Welcome Message */}
             <div>
-
-                <h1 className="text-3xl font-bold text-white">
-                    FluxWork
-                </h1>
-
-                <p className="text-sm text-gray-400">
-                    Smart Task Management
+                <h2 className="text-xl font-bold text-white">
+                    Welcome back, {user?.name} 👋
+                </h2>
+                <p className="text-xs text-gray-400 mt-1">
+                    Manage your workflow efficiently.
                 </p>
-
             </div>
 
-            {/* Right Side */}
-            <div className="flex items-center gap-4">
-
-                <div className="text-right">
-
-                    <p className="text-white font-medium">
-                        {user?.name}
-                    </p>
-
-                    <p className="text-sm text-gray-400">
-                        {user?.email}
-                    </p>
-
+            {/* Right Side: User Info & Logout */}
+            <div className="flex items-center gap-6">
+                <div className="text-right hidden sm:block">
+                    <p className="text-sm font-medium text-white">{user?.name}</p>
+                    <p className="text-xs text-gray-500">{user?.email}</p>
                 </div>
-
                 <button
-                    onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-white transition"
+                    onClick={logout}
+                    className="border border-red-500/50 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition"
                 >
                     Logout
                 </button>
-
             </div>
 
-        </div>
+        </header>
     );
 }
 

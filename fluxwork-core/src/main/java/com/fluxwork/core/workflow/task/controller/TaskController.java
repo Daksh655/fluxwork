@@ -7,6 +7,9 @@ import com.fluxwork.core.workflow.task.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.fluxwork.core.workflow.task.dto.UpdateTaskStatusRequest;
+
+// 1. Import Principal!
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -18,86 +21,60 @@ public class TaskController {
 
     @PostMapping
     public ApiResponse<TaskResponse> createTask(
-            @RequestBody TaskRequest request
+            @RequestBody TaskRequest request,
+            Principal principal // Added Principal here too for safe creation
     ) {
-
-        TaskResponse response = taskService.createTask(request);
-
+        // You should pass the user's identity to ensure the task is created under their account
+        TaskResponse response = taskService.createTask(request, principal.getName());
         return ApiResponse.success(response, "Task created successfully");
     }
 
-
-    @GetMapping("/board/{boardId}") // used for filtering relational data fetching
+    @GetMapping("/board/{boardId}")
     public ApiResponse<List<TaskResponse>> getTasksByBoard(
-            @PathVariable Long boardId
+            @PathVariable Long boardId,
+            Principal principal // Added Principal
     ) {
-
-        List<TaskResponse> response =
-                taskService.getTasksByBoard(boardId);
-
-        return ApiResponse.success(
-                response,
-                "Tasks fetched successfully"
-        );
+        // Pass the user's identity to ensure they actually own this board
+        List<TaskResponse> response = taskService.getTasksByBoard(boardId, principal.getName());
+        return ApiResponse.success(response, "Tasks fetched successfully");
     }
 
-    // this is used to update the status
     @PutMapping("/{taskId}/status")
     public ApiResponse<TaskResponse> updateTaskStatus(
             @PathVariable Long taskId,
             @RequestBody UpdateTaskStatusRequest request
     ) {
-
-        TaskResponse response = taskService.updateTaskStatus(
-                taskId,
-                request.getStatus()
-        );
-
-        return ApiResponse.success(
-                response,
-                "Task status updated successfully"
-        );
+        TaskResponse response = taskService.updateTaskStatus(taskId, request.getStatus());
+        return ApiResponse.success(response, "Task status updated successfully");
     }
 
-    // used to get all task
+    // THIS IS THE MOST IMPORTANT FIX
     @GetMapping
-    public ApiResponse<List<TaskResponse>> getAllTasks() {
+    public ApiResponse<List<TaskResponse>> getAllTasks(Principal principal) {
 
-        List<TaskResponse> response = taskService.getAllTasks();
+        // 1. Extract the logged-in user's email/username from the security context
+        String userEmail = principal.getName();
 
-        return ApiResponse.success(
-                response,
-                "Tasks fetched successfully"
-        );
+        // 2. Pass it to the service so it ONLY fetches tasks for this specific user
+        List<TaskResponse> response = taskService.getAllTasksForUser(userEmail);
+
+        return ApiResponse.success(response, "Tasks fetched successfully");
     }
 
-    // for updating items in task
     @PutMapping("/{taskId}")
     public ApiResponse<TaskResponse> updateTask(
             @PathVariable Long taskId,
             @RequestBody TaskRequest request
     ) {
-
-        TaskResponse response =
-                taskService.updateTask(taskId, request);
-
-        return ApiResponse.success(
-                response,
-                "Task updated successfully"
-        );
+        TaskResponse response = taskService.updateTask(taskId, request);
+        return ApiResponse.success(response, "Task updated successfully");
     }
 
-    // deleting task
     @DeleteMapping("/{taskId}")
     public ApiResponse<String> deleteTask(
             @PathVariable Long taskId
     ) {
-
         taskService.deleteTask(taskId);
-
-        return ApiResponse.success(
-                "Task deleted",
-                "Task deleted successfully"
-        );
+        return ApiResponse.success("Task deleted", "Task deleted successfully");
     }
 }
