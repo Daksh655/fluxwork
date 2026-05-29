@@ -17,7 +17,7 @@ function CreateTaskModal({ isOpen, onClose, onSubmit, taskToEdit }) {
             setTitle("");
             setDescription("");
             setPriority("MEDIUM");
-            setDeadline(""); // Reset for new tasks
+            setDeadline("");
         }
     }, [taskToEdit, isOpen]);
 
@@ -34,8 +34,8 @@ function CreateTaskModal({ isOpen, onClose, onSubmit, taskToEdit }) {
             description,
             priority,
             deadline, // Include new deadline
-            status: taskToEdit ? taskToEdit.status : "TODO",     // BUG FIX: Preserve status
-            boardId: taskToEdit ? taskToEdit.boardId : 2         // BUG FIX: Preserve boardId
+            status: taskToEdit ? taskToEdit.status : "TODO",     // Preserve status
+            boardId: taskToEdit ? taskToEdit.boardId : 2         // Preserve boardId
         });
 
         onClose();

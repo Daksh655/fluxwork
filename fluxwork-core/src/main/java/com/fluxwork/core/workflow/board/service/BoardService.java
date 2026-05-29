@@ -9,6 +9,7 @@ import com.fluxwork.core.workflow.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 @Service // tell spring that this class contain business logic
 @RequiredArgsConstructor
 public class BoardService {

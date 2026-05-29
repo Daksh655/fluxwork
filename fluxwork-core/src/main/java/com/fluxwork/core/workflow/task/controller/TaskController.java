@@ -42,9 +42,11 @@ public class TaskController {
     @PutMapping("/{taskId}/status")
     public ApiResponse<TaskResponse> updateTaskStatus(
             @PathVariable Long taskId,
-            @RequestBody UpdateTaskStatusRequest request
+            @RequestBody UpdateTaskStatusRequest request,
+            Principal principal // 🔒 Added Security Check
     ) {
-        TaskResponse response = taskService.updateTaskStatus(taskId, request.getStatus());
+        // Pass the user's email to the service!
+        TaskResponse response = taskService.updateTaskStatus(taskId, request.getStatus(), principal.getName());
         return ApiResponse.success(response, "Task status updated successfully");
     }
 
@@ -64,17 +66,19 @@ public class TaskController {
     @PutMapping("/{taskId}")
     public ApiResponse<TaskResponse> updateTask(
             @PathVariable Long taskId,
-            @RequestBody TaskRequest request
+            @RequestBody TaskRequest request,
+            Principal principal // 🔒 Added Security Check
     ) {
-        TaskResponse response = taskService.updateTask(taskId, request);
+        TaskResponse response = taskService.updateTask(taskId, request, principal.getName());
         return ApiResponse.success(response, "Task updated successfully");
     }
 
     @DeleteMapping("/{taskId}")
     public ApiResponse<String> deleteTask(
-            @PathVariable Long taskId
+            @PathVariable Long taskId,
+            Principal principal // 🔒 Added Security Check
     ) {
-        taskService.deleteTask(taskId);
+        taskService.deleteTask(taskId, principal.getName());
         return ApiResponse.success("Task deleted", "Task deleted successfully");
     }
 }

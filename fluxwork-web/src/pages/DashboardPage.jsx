@@ -14,21 +14,21 @@ function DashboardPage() {
     // Grab the active board ID from the Layout frame
     const { activeBoardId } = useOutletContext();
 
-    // FETCH TASKS
 // FETCH TASKS
     async function fetchTasks() {
         if (!activeBoardId) return;
         try {
-            // If your backend filters by board, pass it here: e.g., getAllTasks(activeBoardId)
-            const data = await getAllTasks();
+            // Call the service function we just updated
+            const taskArray = await getAllTasks();
 
-            // Now, if data is null, it falls back to an empty array and won't crash!
-            // By wrapping both in String(), we guarantee they match perfectly!
-            const filteredData = (data || []).filter(task => String(task.boardId) === String(activeBoardId));
+            // Perfect string match filtering for the active board
+            const filteredData = (taskArray || []).filter(
+                task => String(task.boardId) === String(activeBoardId)
+            );
 
             setTasks(filteredData);
         } catch (error) {
-            console.error(error);
+            console.error("Failed to fetch tasks on dashboard:", error);
         }
     }
 
@@ -38,33 +38,28 @@ function DashboardPage() {
     }, [activeBoardId]);
 
 
-// SUBMIT TASK (Handles both Create & Edit)
+    // SUBMIT TASK
     const handleSubmitTask = async (taskDataFromModal) => {
         try {
-            // 1. Format the deadline for Spring Boot
             let finalDeadline = null;
             if (taskDataFromModal.deadline) {
                 finalDeadline = `${taskDataFromModal.deadline}T23:59:59`;
             }
 
-            // 2. Build the exact payload Spring Boot is expecting
             const payload = {
                 title: taskDataFromModal.title,
                 description: taskDataFromModal.description,
-                status: taskDataFromModal.status || "TODO", // Force "TODO" if empty
+                status: taskDataFromModal.status || "TODO",
                 priority: taskDataFromModal.priority,
                 deadline: finalDeadline,
-                boardId: activeBoardId // 🔥 CRITICAL: Must send the active board ID!
+                boardId: activeBoardId
             };
 
-            // 3. Send to the backend
-            await axios.post('http://localhost:8080/api/tasks', payload);
+            // Send payload to Spring Boot (Appends to localhost:8080 automatically)
+            await axios.post('/api/tasks', payload);
 
-            // 4. 🔥 CRITICAL: Tell React to fetch the updated list from the database!
+            // Refresh the UI with the new data
             await fetchTasks();
-
-            // 5. Close the modal (if you have a state for that)
-            // setIsModalOpen(false);
 
         } catch (error) {
             console.error("Failed to create task:", error);

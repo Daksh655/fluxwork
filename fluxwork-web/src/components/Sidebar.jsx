@@ -37,7 +37,7 @@ function Sidebar({ activeBoardId, setActiveBoardId }) {
                 </p>
 
                 <div className="space-y-1">
-                    {boards.map((board) => (
+                    {(boards || []).map((board) => (
                         <button
                             key={board.id}
                             onClick={() => setActiveBoardId(board.id)}

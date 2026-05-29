@@ -1,5 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom"; // Navigateion
-import { AuthProvider } from "./context/AuthContext";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 import LoginPage from "./pages/LoginPage";
@@ -9,25 +8,19 @@ import MainLayout from "./layouts/MainLayout";
 
 function App() {
     return (
-        <AuthProvider>
-            <Routes>
-                {/* Automatically redirect the root URL to the dashboard */}
-                <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-                {/* Public Routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+        <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-                {/* The Bouncer (Protected Routes) */}
-                <Route element={<ProtectedRoute />}>
-                    {/* The Frame (Layout) */}
-                    <Route element={<MainLayout />}>
-                        {/* The Actual Pages */}
-                        <Route path="/dashboard" element={<DashboardPage />} />
-                    </Route>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+
+            <Route element={<ProtectedRoute />}>
+                <Route element={<MainLayout />}>
+                    <Route path="/dashboard" element={<DashboardPage />} />
                 </Route>
-            </Routes>
-        </AuthProvider>
+            </Route>
+        </Routes>
     );
 }
 

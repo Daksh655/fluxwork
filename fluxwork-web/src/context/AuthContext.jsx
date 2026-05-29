@@ -18,13 +18,13 @@ export function AuthProvider({ children }) {
     }, []);
 
     const login = (userData) => {
-        // Save to local storage
+        //  Save to local storage
         localStorage.setItem("user", JSON.stringify(userData));
 
         // Update React State
         setUser(userData);
 
-        // FORCE the router to move to the Dashboard!
+        // Tell the GPS to drive to the dashboard!
         navigate("/dashboard");
     };
 
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     if (loading) return <div className="h-screen bg-gray-950 text-white flex items-center justify-center">Loading...</div>;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

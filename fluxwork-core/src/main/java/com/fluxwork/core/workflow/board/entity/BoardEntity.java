@@ -1,23 +1,24 @@
 package com.fluxwork.core.workflow.board.entity;
 
+import com.fluxwork.core.tenant.user.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity // convert this java class into PostgreSql table
-@Table(name = "boards") // the table name is boards in DB
+@Entity
+@Table(name = "boards")
 
 @Getter
 @Setter
-public class BoardEntity { // create board table in PostgreSql
+public class BoardEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // primary key with auto increment
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false) // name is mandatory
+    @Column(nullable = false)
     private String name;
 
     private String description;
@@ -26,12 +27,17 @@ public class BoardEntity { // create board table in PostgreSql
 
     private LocalDateTime updatedAt;
 
-    @PrePersist   // runs before just safe
+    // This links the board directly to the user who created it!
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
+
+    @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    @PreUpdate  // run before update query
+    @PreUpdate
     public void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }

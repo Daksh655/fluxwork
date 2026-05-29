@@ -3,7 +3,15 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 function ProtectedRoute() {
-    const { user } = useContext(AuthContext);
+    const { user, loading } = useContext(AuthContext);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-900 flex items-center justify-center text-blue-500">
+                Loading...
+            </div>
+        );
+    }
 
     // If there is no user, kick them back to the login page immediately
     if (!user) {
