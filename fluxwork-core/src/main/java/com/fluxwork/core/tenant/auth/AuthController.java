@@ -1,6 +1,7 @@
 package com.fluxwork.core.tenant.auth;
 
 import com.fluxwork.core.common.response.ApiResponse;
+import com.fluxwork.core.common.security.JwtUtil; // makes new token
 import com.fluxwork.core.tenant.user.dto.RegisterRequest; // register - user to backend
 import com.fluxwork.core.tenant.user.dto.UserResponse; // register - backend to user
 import com.fluxwork.core.tenant.user.dto.LoginRequest; // login - user to backend
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 public class AuthController {
     private final UserService userService; // means it will use UserService
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/register") // this created the register api , means it send data to server, eg: for register, login, create new user
     public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request) {  // function that runs when a api is called and return from UserResponse.java . @RequestBody : take JSON from frontend and convert to object
@@ -30,6 +32,9 @@ public class AuthController {
     public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
 
         LoginResponse response = userService.login(request);
+
+        String token = jwtUtil.generateToken(request.getEmail()); // if password correct generate token
+        response.setToken(token);
 
         return ApiResponse.success(response, "Login successful");
     }

@@ -24,7 +24,7 @@ function RegisterPage() {
         try {
 
             const response = await api.post( // Calls backend API using axios
-                "/auth/register",
+                "/api/auth/register",
                 formData
             );
 

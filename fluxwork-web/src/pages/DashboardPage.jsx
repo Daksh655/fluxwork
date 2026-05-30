@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom"; // Import context hook
-import axios from "axios";
+import { useOutletContext } from "react-router-dom";
 import api from "../services/api";
 import { getAllTasks } from "../services/taskService";
 import TaskColumn from "../components/TaskColumn";
@@ -11,34 +10,28 @@ function DashboardPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
 
-    // Grab the active board ID from the Layout frame
     const { activeBoardId } = useOutletContext();
 
-// FETCH TASKS
     async function fetchTasks() {
-        if (!activeBoardId) return;
+        if (!activeBoardId) {
+            setTasks([]);
+            return;
+        }
         try {
-            // Call the service function we just updated
             const taskArray = await getAllTasks();
-
-            // Perfect string match filtering for the active board
             const filteredData = (taskArray || []).filter(
                 task => String(task.boardId) === String(activeBoardId)
             );
-
             setTasks(filteredData);
         } catch (error) {
-            console.error("Failed to fetch tasks on dashboard:", error);
+            console.error("Failed to fetch tasks:", error);
         }
     }
 
-    // Automatically re-fetch data whenever the user switches boards!
     useEffect(() => {
         fetchTasks();
     }, [activeBoardId]);
 
-
-    // SUBMIT TASK
     const handleSubmitTask = async (taskDataFromModal) => {
         try {
             let finalDeadline = null;
@@ -55,23 +48,25 @@ function DashboardPage() {
                 boardId: activeBoardId
             };
 
-            // Send payload to Spring Boot (Appends to localhost:8080 automatically)
-            await axios.post('/api/tasks', payload);
+            // If it's an edit vs new task
+            if (editingTask) {
+                await api.put(`/api/tasks/${editingTask.id}`, payload);
+            } else {
+                await api.post('/api/tasks', payload);
+            }
 
-            // Refresh the UI with the new data
+            // The Quick Way: Force a complete fresh download
             await fetchTasks();
 
         } catch (error) {
-            console.error("Failed to create task:", error);
+            console.error("Failed to save task:", error);
+            alert("Failed to save task! Check the console.");
         }
     };
 
-    // MOVE TASK STATUS
     const handleMoveTask = async (taskId, newStatus) => {
         try {
-            await api.put(`/tasks/${taskId}/status`, {
-                status: newStatus
-            });
+            await api.put(`/api/tasks/${taskId}/status`, { status: newStatus });
             await fetchTasks();
         } catch (error) {
             console.error(error);
@@ -79,12 +74,11 @@ function DashboardPage() {
         }
     };
 
-    // DELETE TASK
     const handleDeleteTask = async (taskId) => {
         if (!window.confirm("Are you sure you want to delete this task?")) return;
 
         try {
-            await api.delete(`/tasks/${taskId}`);
+            await api.delete(`/api/tasks/${taskId}`);
             await fetchTasks();
         } catch (error) {
             console.error(error);
@@ -92,7 +86,6 @@ function DashboardPage() {
         }
     };
 
-    // FILTER TASKS FOR COLUMNS
     const todoTasks = tasks.filter(task => task.status === "TODO");
     const inProgressTasks = tasks.filter(task => task.status === "IN_PROGRESS");
     const doneTasks = tasks.filter(task => task.status === "DONE");
@@ -101,18 +94,23 @@ function DashboardPage() {
         <div>
             {/* Sleek Action Bar */}
             <div className="flex justify-start mb-6">
-                <button
-                    onClick={() => {
-                        setEditingTask(null);
-                        setIsModalOpen(true);
-                    }}
-                    className="flex items-center gap-2 border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-sm"
-                >
-                    <span>➕</span> New Task
-                </button>
+                {activeBoardId ? (
+                    <button
+                        onClick={() => {
+                            setEditingTask(null);
+                            setIsModalOpen(true);
+                        }}
+                        className="flex items-center gap-2 border border-blue-500 text-blue-400 hover:bg-blue-600 hover:text-white px-5 py-2.5 rounded-xl text-sm font-bold transition shadow-sm"
+                    >
+                        <span>➕</span> New Task
+                    </button>
+                ) : (
+                    <div className="text-gray-400 italic bg-gray-800/50 px-4 py-2 rounded-lg border border-gray-700">
+                        👈 Please create or select a Board from the sidebar to add tasks!
+                    </div>
+                )}
             </div>
 
-            {/* The Smart Modal */}
             <CreateTaskModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
@@ -120,7 +118,6 @@ function DashboardPage() {
                 taskToEdit={editingTask}
             />
 
-            {/* Columns */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <TaskColumn
                     title="TODO"

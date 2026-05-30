@@ -12,3 +12,14 @@ export const getAllBoards = async () => {
         throw error;
     }
 };
+
+export const createBoard = async (boardData) => {
+    try {
+        // Sends the new board to Spring Boot
+        const response = await api.post('/api/boards', boardData);
+        return response.data.data || response.data;
+    } catch (error) {
+        console.error("Error creating board:", error);
+        throw error;
+    }
+};

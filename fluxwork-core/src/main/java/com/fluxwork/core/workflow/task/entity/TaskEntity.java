@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
-
 @Getter
 @Setter
 public class TaskEntity {
@@ -34,8 +33,8 @@ public class TaskEntity {
 
     private LocalDateTime updatedAt;
 
-    @ManyToOne // many tasks belong to only one board
-    @JoinColumn(name = "board_id") // this create board_id column inside tasks table
+    @ManyToOne
+    @JoinColumn(name = "board_id")
     private BoardEntity board;
 
     @PrePersist

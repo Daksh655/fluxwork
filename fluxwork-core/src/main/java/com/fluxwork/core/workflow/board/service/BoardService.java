@@ -2,8 +2,11 @@ package com.fluxwork.core.workflow.board.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.fluxwork.core.tenant.user.repository.UserRepository;
 import com.fluxwork.core.workflow.board.dto.BoardRequest;
 import com.fluxwork.core.workflow.board.dto.BoardResponse;
+import com.fluxwork.core.tenant.user.entity.UserEntity;
 import com.fluxwork.core.workflow.board.entity.BoardEntity;
 import com.fluxwork.core.workflow.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,19 +18,26 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository; // Inject the UserRepository
 
-    // this is the creat a new board
-    public BoardResponse createBoard(BoardRequest request) {
+    // Accept the email address from the controller
+    public BoardResponse createBoard(BoardRequest request, String email) {
+
+        // Find the exact user in the database
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         BoardEntity board = new BoardEntity();
-
         board.setName(request.getName());
         board.setDescription(request.getDescription());
 
-        BoardEntity savedBoard = boardRepository.save(board); // this generate SQL and insert into PostgreSql
+        // LOCK THE BOARD TO THE USER!
+        board.setUser(user);
+
+        // Now PostgreSQL will happily save it!
+        BoardEntity savedBoard = boardRepository.save(board);
 
         BoardResponse response = new BoardResponse();
-
         response.setId(savedBoard.getId());
         response.setName(savedBoard.getName());
         response.setDescription(savedBoard.getDescription());

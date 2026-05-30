@@ -23,7 +23,6 @@ public class TaskService {
         BoardEntity board = boardRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new RuntimeException("Board not found"));
 
-        // 🔒 SECURITY: Prevent user from adding tasks to someone else's board
         if (!board.getUser().getEmail().equals(userEmail)) {
             throw new RuntimeException("Unauthorized: You do not own this board");
         }
@@ -41,32 +40,39 @@ public class TaskService {
     }
 
     public List<TaskResponse> getTasksByBoard(Long boardId, String userEmail) {
-        // 🔒 SECURITY: We will assume you will secure Board access later,
-        // but for now, let's keep it running so you can test.
-        List<TaskEntity> tasks = taskRepository.findByBoardId(boardId);
-        return tasks.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return taskRepository.findByBoardId(boardId).stream()
+                .filter(task -> task.getBoard().getUser().getEmail().equals(userEmail))
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    // 🔒 SECURITY FIXED: Now it ONLY fetches tasks for the logged-in user!
     public List<TaskResponse> getAllTasksForUser(String userEmail) {
-        List<TaskEntity> tasks = taskRepository.findAllByUserEmail(userEmail);
-        return tasks.stream().map(this::mapToResponse).collect(Collectors.toList());
+        return taskRepository.findAll().stream()
+                .filter(task -> task.getBoard() != null && task.getBoard().getUser().getEmail().equals(userEmail))
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
-    // 🔒 SECURITY FIXED: Added userEmail and secure database check
     public TaskResponse updateTaskStatus(Long taskId, String status, String userEmail) {
-        TaskEntity task = taskRepository.findByIdAndUserEmail(taskId, userEmail)
-                .orElseThrow(() -> new RuntimeException("Task not found or unauthorized"));
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getBoard().getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("Unauthorized action");
+        }
 
         task.setStatus(status);
         TaskEntity updatedTask = taskRepository.save(task);
         return mapToResponse(updatedTask);
     }
 
-    // 🔒 SECURITY FIXED: Added userEmail and secure database check
     public TaskResponse updateTask(Long taskId, TaskRequest request, String userEmail) {
-        TaskEntity task = taskRepository.findByIdAndUserEmail(taskId, userEmail)
-                .orElseThrow(() -> new RuntimeException("Task not found or unauthorized"));
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getBoard().getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("Unauthorized action");
+        }
 
         BoardEntity board = boardRepository.findById(request.getBoardId())
                 .orElseThrow(() -> new RuntimeException("Board not found"));
@@ -82,10 +88,13 @@ public class TaskService {
         return mapToResponse(updatedTask);
     }
 
-    // 🔒 SECURITY FIXED: Added userEmail and secure database check
     public void deleteTask(Long taskId, String userEmail) {
-        TaskEntity task = taskRepository.findByIdAndUserEmail(taskId, userEmail)
-                .orElseThrow(() -> new RuntimeException("Task not found or unauthorized"));
+        TaskEntity task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (!task.getBoard().getUser().getEmail().equals(userEmail)) {
+            throw new RuntimeException("Unauthorized action");
+        }
         taskRepository.delete(task);
     }
 

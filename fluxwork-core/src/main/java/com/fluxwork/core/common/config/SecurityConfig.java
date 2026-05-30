@@ -1,5 +1,7 @@
 package com.fluxwork.core.common.config;
 
+import com.fluxwork.core.common.security.JwtAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,16 +17,22 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for API endpoints
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Wire custom CORS directly into Security!
+                .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Let anyone try to login or register
-                        .anyRequest().permitAll() // Temporarily leave other endpoints open until we add the JWT filter
-                );
+                        .requestMatchers("/api/auth/**").permitAll() // Login/Register are public
+                        .anyRequest().authenticated() // 🔒 Everything else is locked!
+                )
+                .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

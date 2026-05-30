@@ -1,23 +1,24 @@
 import axios from 'axios';
 
-// 1. Create a dedicated Axios instance pointing to Spring Boot
 const api = axios.create({
     baseURL: 'http://localhost:8080',
 });
 
-// 2. The Interceptor (The Toll Booth)
 api.interceptors.request.use(
     (config) => {
-        // Look inside localStorage for the user data we saved during login
         const storedUser = localStorage.getItem('user');
+        console.log("🛠️ [REACT] Checking Local Storage for User:", storedUser);
 
         if (storedUser) {
             const user = JSON.parse(storedUser);
-
-            // If we find a token, attach it to the headers exactly how Spring Security expects it!
             if (user && user.token) {
+                console.log("✅ [REACT] Wristband found! Taping it to the request...");
                 config.headers.Authorization = `Bearer ${user.token}`;
+            } else {
+                console.warn("⚠️ [REACT] User found, but there is NO TOKEN inside it!");
             }
+        } else {
+            console.error("❌ [REACT] Local storage is completely empty. No user found.");
         }
         return config;
     },

@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // 👈 1. Bring the GPS back
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 
 function LoginPage() {
     const { login } = useContext(AuthContext);
-    const navigate = useNavigate(); // 👈 2. Turn the GPS on
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         email: "",
@@ -23,10 +23,10 @@ function LoginPage() {
         e.preventDefault();
 
         try {
-            const response = await api.post("/auth/login", formData);
+            const response = await api.post("/api/auth/login", formData);
 
             // Save the token to your context
-            login(response.data);
+            login(response.data.data);
             // transport to dashboard
             navigate("/dashboard");
 
