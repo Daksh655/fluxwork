@@ -17,7 +17,6 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    // 🚨 This is the method Spring Boot claimed was missing!
     @PostMapping
     public ApiResponse<BoardResponse> createBoard(
             @RequestBody BoardRequest request,
@@ -28,8 +27,10 @@ public class BoardController {
     }
 
     @GetMapping
-    public ApiResponse<List<BoardResponse>> getAllBoards() {
-        List<BoardResponse> response = boardService.getAllBoards();
+    public ApiResponse<List<BoardResponse>> getAllBoards(
+            Principal principal
+    ) {
+        List<BoardResponse> response = boardService.getAllBoards(principal.getName());
         return ApiResponse.success(response, "Boards fetched successfully");
     }
 

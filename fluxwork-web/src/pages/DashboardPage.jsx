@@ -55,7 +55,6 @@ function DashboardPage() {
                 await api.post('/api/tasks', payload);
             }
 
-            // The Quick Way: Force a complete fresh download
             await fetchTasks();
 
         } catch (error) {

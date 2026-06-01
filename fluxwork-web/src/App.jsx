@@ -1,26 +1,38 @@
-import { Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import { Routes, Route, Navigate } from "react-router-dom"; // 🚨 Removed BrowserRouter from here
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { useContext } from "react";
 
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import DashboardPage from "./pages/DashboardPage";
-import MainLayout from "./layouts/MainLayout";
+import LoginPage from "./pages/LoginPage.jsx";
+import RegisterPage from "./pages/RegisterPage.jsx";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import MainLayout from "./layouts/MainLayout.jsx";
+import HomePage from "./pages/HomePage.jsx";
+
+function ProtectedRoute({ children }) {
+    const { user, loading } = useContext(AuthContext);
+    if (loading) return <div className="h-screen bg-gray-950 flex items-center justify-center text-white">Loading...</div>;
+    if (!user) return <Navigate to="/login" />;
+    return children;
+}
 
 function App() {
     return (
+        <AuthProvider>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
 
-        <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-
-            <Route element={<ProtectedRoute />}>
-                <Route element={<MainLayout />}>
-                    <Route path="/dashboard" element={<DashboardPage />} />
+                {/* Protected Dashboard Route */}
+                <Route path="/" element={
+                    <ProtectedRoute>
+                        <MainLayout />
+                    </ProtectedRoute>
+                }>
+                    <Route path="dashboard" element={<DashboardPage />} />
                 </Route>
-            </Route>
-        </Routes>
+            </Routes>
+        </AuthProvider>
     );
 }
 

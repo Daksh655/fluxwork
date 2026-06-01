@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 function MainLayout() {
-    // Lift the board state up so both Sidebar and Dashboard can share it
+
     const [activeBoardId, setActiveBoardId] = useState(null);
 
     return (

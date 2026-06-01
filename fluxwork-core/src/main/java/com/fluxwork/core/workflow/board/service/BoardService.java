@@ -47,22 +47,12 @@ public class BoardService {
     }
 
     // this is to find all the board form DB
-    public List<BoardResponse> getAllBoards() {
+    public List<BoardResponse> getAllBoards(String userEmail) {
+        return boardRepository.findAll().stream()
 
-        List<BoardEntity> boards = boardRepository.findAll(); // fetch all board
-
-        return boards.stream().map(board -> { // convert boardEntity to boardResponse
-
-            BoardResponse response = new BoardResponse();
-
-            response.setId(board.getId());
-            response.setName(board.getName());
-            response.setDescription(board.getDescription());
-            response.setCreatedAt(board.getCreatedAt());
-
-            return response;
-
-        }).collect(Collectors.toList()); // Converts stream back into List
+                .filter(board -> board.getUser() != null && board.getUser().getEmail().equals(userEmail))
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     // this is the update the board by using ID
@@ -93,5 +83,15 @@ public class BoardService {
                 .orElseThrow(() -> new RuntimeException("Board not found"));
 
         boardRepository.delete(board); // auto generate sql query of deletion
+    }
+
+    // this helper method if for GetAllBoard method
+    private BoardResponse mapToResponse(BoardEntity board) {
+        BoardResponse response = new BoardResponse();
+        response.setId(board.getId());
+        response.setName(board.getName());
+        response.setDescription(board.getDescription());
+        response.setCreatedAt(board.getCreatedAt());
+        return response;
     }
 }

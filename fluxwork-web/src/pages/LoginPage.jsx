@@ -25,10 +25,10 @@ function LoginPage() {
         try {
             const response = await api.post("/api/auth/login", formData);
 
-            // Save the token to your context
-            login(response.data.data);
-            // transport to dashboard
-            navigate("/dashboard");
+
+            login(response.data.data); // Save the token to your context
+
+            navigate("/dashboard"); // transport to dashboard
 
         } catch (error) {
             console.error(error);

@@ -13,12 +13,11 @@ function ProtectedRoute() {
         );
     }
 
-    // If there is no user, kick them back to the login page immediately
-    if (!user) {
+
+    if (!user) { // If there is no user, move them back to the login page immediately
         return <Navigate to="/login" replace />;
     }
 
-    // If they ARE logged in, open the gates and render the child components
     return <Outlet />;
 }
 

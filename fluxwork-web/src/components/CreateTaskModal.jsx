@@ -33,8 +33,8 @@ function CreateTaskModal({ isOpen, onClose, onSubmit, taskToEdit }) {
             title,
             description,
             priority,
-            deadline, // Include new deadline
-            status: taskToEdit ? taskToEdit.status : "TODO",     // Preserve status
+            deadline,
+            status: taskToEdit ? taskToEdit.status : "TODO",     // every task first status is TODO
             boardId: taskToEdit ? taskToEdit.boardId : 2         // Preserve boardId
         });
 
@@ -75,7 +75,7 @@ function CreateTaskModal({ isOpen, onClose, onSubmit, taskToEdit }) {
                         />
                     </div>
 
-                    {/* Side-by-Side Priority and Deadline */}
+                    {/* priority and deadline are side by side */}
                     <div className="flex gap-4">
                         <div className="flex-1">
                             <label className="block text-sm font-medium text-gray-400 mb-1">Priority</label>

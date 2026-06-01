@@ -14,11 +14,11 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long> {
 
     List<TaskEntity> findByBoardId(Long boardId);
 
-    // 🔒 SECURITY: Find a single task, BUT ONLY if it belongs to this user's board
+    // for security: Find a single task, BUT ONLY if it belongs to this user's board
     @Query("SELECT t FROM TaskEntity t WHERE t.id = :taskId AND t.board.user.email = :userEmail")
     Optional<TaskEntity> findByIdAndUserEmail(@Param("taskId") Long taskId, @Param("userEmail") String userEmail);
 
-    // 🔒 SECURITY: Find ALL tasks, BUT ONLY if they belong to this user
+    // for security: Find ALL tasks, BUT ONLY if they belong to this user
     @Query("SELECT t FROM TaskEntity t WHERE t.board.user.email = :userEmail")
     List<TaskEntity> findAllByUserEmail(@Param("userEmail") String userEmail);
 }

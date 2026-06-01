@@ -8,8 +8,8 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true); // Prevents flickering before check
     const navigate = useNavigate();
 
-    // Check if user exists on initial load
-    useEffect(() => {
+
+    useEffect(() => {  // Check if user exists on initial load
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             setUser(JSON.parse(storedUser));
@@ -18,22 +18,18 @@ export function AuthProvider({ children }) {
     }, []);
 
     const login = (userData) => {
-        //  Save to local storage
-        localStorage.setItem("user", JSON.stringify(userData));
 
-        // Update React State
-        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData)); //  Save to local storage
 
-        // Tell the GPS to drive to the dashboard!
-        navigate("/dashboard");
+        setUser(userData); // Update React State
+
+        navigate("/dashboard"); // Tell the GPS to drive to the dashboard!
     };
 
     const logout = () => {
-        // Clear the storage
-        localStorage.removeItem("user");
 
-        // FORCE a full page reload to wipe all React memory
-        window.location.href = "/login";
+        localStorage.removeItem("user"); // Clear the storage
+        window.location.href = "/login";  // force a full page reload to wipe all React memory
     };
 
     if (loading) return <div className="h-screen bg-gray-950 text-white flex items-center justify-center">Loading...</div>;
