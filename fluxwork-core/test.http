@@ -1,11 +1,7 @@
-GET http://localhost:8080/api/tasks
-Content-Type: application/json
+### Test 1: Save a new item into the AWS Cloud Database
+GET http://localhost:8080/test-save?name=ItemFromHttpFile
 
-{
-  "title": "Updated Login Page",
-  "description": "Updated React login UI",
-  "status": "IN_PROGRESS",
-  "priority": "MEDIUM",
-  "deadline": "2026-05-01T18:00:00",
-  "boardId": 2
-}
+###
+
+### Test 2: List all items currently sitting inside AWS
+GET http://localhost:8080/test-list
