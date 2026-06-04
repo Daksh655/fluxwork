@@ -46,7 +46,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of("http://localhost:5173",
-                "http://fluxwork-frontend.s3-website.eu-north-1.amazonaws.com"
+                "http://fluxwork-frontend.s3-website.eu-north-1.amazonaws.com",
+                "https://d561sdevlxo9y.cloudfront.net"
         )); // Allow React frontend
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly allow OPTIONS for pre-flight
