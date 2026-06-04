@@ -1,6 +1,6 @@
-import api from './api'; // 🔒 Use the secure interceptor instance
+import api from './api'; // Use the secure interceptor instance
 
-// FETCH ALL TASKS
+// to fetch all tasks
 export const getAllTasks = async () => {
     try {
         const response = await api.get('/api/tasks');
@@ -8,7 +8,6 @@ export const getAllTasks = async () => {
 
         // response.data is the Axios response
         // response.data.data is your Spring Boot ApiResponse wrapper
-        // We fallback to an empty array [] if it's null to prevent UI crashes
         return response.data.data || [];
 
     } catch (error) {
@@ -17,7 +16,7 @@ export const getAllTasks = async () => {
     }
 };
 
-// SUBMIT A NEW TASK
+// to submit a new task
 export const createTask = async (taskPayload) => {
     try {
         const response = await api.post('/api/tasks', taskPayload);

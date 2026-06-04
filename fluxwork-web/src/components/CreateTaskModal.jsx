@@ -12,7 +12,11 @@ function CreateTaskModal({ isOpen, onClose, onSubmit, taskToEdit }) {
             setTitle(taskToEdit.title);
             setDescription(taskToEdit.description || "");
             setPriority(taskToEdit.priority || "MEDIUM");
-            setDeadline(taskToEdit.deadline || ""); // Auto-fill Deadline
+            setDeadline(
+                taskToEdit.deadline
+                    ? taskToEdit.deadline.split("T")[0]
+                    : ""
+            ); // Auto-fill Deadline
         } else {
             setTitle("");
             setDescription("");

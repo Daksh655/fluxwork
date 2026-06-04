@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom"; // 🚨 Removed BrowserRouter from here
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
 import { useContext } from "react";
 
@@ -17,7 +17,6 @@ function ProtectedRoute({ children }) {
 
 function App() {
     return (
-        <AuthProvider>
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/login" element={<LoginPage />} />
@@ -32,7 +31,6 @@ function App() {
                     <Route path="dashboard" element={<DashboardPage />} />
                 </Route>
             </Routes>
-        </AuthProvider>
     );
 }
 

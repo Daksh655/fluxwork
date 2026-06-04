@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://fluxwork-backend-env.eba-quyayh3f.eu-north-1.elasticbeanstalk.com',
 });
 
 api.interceptors.request.use(
@@ -12,13 +12,13 @@ api.interceptors.request.use(
         if (storedUser) {
             const user = JSON.parse(storedUser);
             if (user && user.token) {
-                console.log("✅ [REACT] Wristband found! Taping it to the request...");
+                console.log("in React: Wristband found! Taping it to the request...");
                 config.headers.Authorization = `Bearer ${user.token}`;
             } else {
-                console.warn("⚠️ [REACT] User found, but there is NO TOKEN inside it!");
+                console.warn("in React: User found, but there is NO TOKEN inside it!");
             }
         } else {
-            console.error("❌ [REACT] Local storage is completely empty. No user found.");
+            console.error("in React: Local storage is completely empty. No user found.");
         }
         return config;
     },

@@ -36,7 +36,11 @@ function DashboardPage() {
         try {
             let finalDeadline = null;
             if (taskDataFromModal.deadline) {
-                finalDeadline = `${taskDataFromModal.deadline}T23:59:59`;
+                if (taskDataFromModal.deadline.includes("T")) {
+                    finalDeadline = taskDataFromModal.deadline;
+                } else {
+                    finalDeadline = `${taskDataFromModal.deadline}T23:59:59`;
+                }
             }
 
             const payload = {

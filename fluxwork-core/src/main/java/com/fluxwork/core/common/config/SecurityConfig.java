@@ -29,7 +29,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // Login/Register are public
+                        .requestMatchers("/api/auth/**",
+                                        "/api/health",
+                                        "/"
+                        ).permitAll() // Login/Register are public
                         .anyRequest().authenticated() // 🔒 Everything else is locked!
                 )
                 .addFilterBefore(jwtAuthenticationFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class);
@@ -42,7 +45,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // Allow React frontend
+        config.setAllowedOrigins(List.of("http://localhost:5173",
+                "http://fluxwork-frontend.s3-website.eu-north-1.amazonaws.com"
+        )); // Allow React frontend
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Explicitly allow OPTIONS for pre-flight
 

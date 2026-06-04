@@ -7,10 +7,7 @@ import com.fluxwork.core.tenant.user.dto.UserResponse; // register - backend to 
 import com.fluxwork.core.tenant.user.dto.LoginRequest; // login - user to backend
 import com.fluxwork.core.tenant.user.dto.LoginResponse; // login - backend to user
 import com.fluxwork.core.tenant.user.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 @RestController  // this handles the http requests, means it create api like GET/user, POST/login, POST/register etc
@@ -20,6 +17,16 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
     private final UserService userService; // means it will use UserService
     private final JwtUtil jwtUtil;
+
+    @GetMapping("/")
+    public String home() {
+        return "FluxWork Backend Running";
+    }
+
+    @GetMapping("/health")
+    public String health() {
+        return "OK";
+    }
 
     @PostMapping("/register") // this created the register api , means it send data to server, eg: for register, login, create new user
     public ApiResponse<UserResponse> register(@RequestBody RegisterRequest request) {  // function that runs when a api is called and return from UserResponse.java . @RequestBody : take JSON from frontend and convert to object
