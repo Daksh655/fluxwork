@@ -14,7 +14,7 @@ public class HealthController {
         return new ApiResponse<>(
                 200,
                 "Service is running",
-                "FluxWork Core Backend is UP"
+                "FluxWork Core Backend is UP - CI/CD test"
         );
     }
 }
