@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
@@ -7,6 +7,14 @@ import { Link } from "react-router-dom";
 function LoginPage() {
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user, navigate]);
 
     const [formData, setFormData] = useState({
         email: "",

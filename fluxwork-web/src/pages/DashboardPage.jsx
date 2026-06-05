@@ -121,6 +121,17 @@ function DashboardPage() {
                 taskToEdit={editingTask}
             />
 
+            {activeBoardId && tasks.length === 0 && (
+                <div className="bg-gray-800 border border-gray-700 rounded-2xl p-10 text-center mb-6">
+                    <h3 className="text-xl text-white font-bold">
+                        No tasks yet
+                    </h3>
+                    <p className="text-gray-400 mt-2">
+                        Create your first task to get started.
+                    </p>
+                </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <TaskColumn
                     title="TODO"

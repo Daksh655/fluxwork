@@ -1,8 +1,21 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import api from "../services/api";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {AuthContext} from "../context/AuthContext.jsx";
 
 function RegisterPage() {
+
+    const { user } = useContext(AuthContext);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    }, [user, navigate]);
+
 
     const [formData, setFormData] = useState({ // Stores form data inside React state.
         name: "",
@@ -32,6 +45,7 @@ function RegisterPage() {
             console.log(response.data);
 
             alert("User registered successfully!");
+            navigate("/login");
 
         } catch (error) {
 
