@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
     const { login } = useContext(AuthContext);
@@ -59,6 +60,22 @@ function LoginPage() {
                 <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white p-3 rounded">
                     Login
                 </button>
+
+                <div className="flex justify-between items-center pt-2">
+                    <Link
+                        to="/"
+                        className="text-gray-400 hover:text-white transition"
+                    >
+                        ← Back
+                    </Link>
+
+                    <Link
+                        to="/register"
+                        className="text-blue-400 hover:text-blue-300 transition"
+                    >
+                        Register
+                    </Link>
+                </div>
             </form>
         </div>
     );

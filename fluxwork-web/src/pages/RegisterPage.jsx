@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function RegisterPage() {
 
@@ -85,6 +86,22 @@ function RegisterPage() {
                 >
                     Register
                 </button>
+
+                <div className="flex justify-between items-center pt-2">
+                    <Link
+                        to="/"
+                        className="text-gray-400 hover:text-white transition"
+                    >
+                        ← Back
+                    </Link>
+
+                    <Link
+                        to="/login"
+                        className="text-blue-400 hover:text-blue-300 transition"
+                    >
+                        Login
+                    </Link>
+                </div>
 
             </form>
 
