@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from "./context/AuthContext.jsx";
 
 // Force all Axios requests to point to the Spring Boot server
-axios.defaults.baseURL = 'http://fluxwork-backend-env.eba-quyayh3f.eu-north-1.elasticbeanstalk.com';
+axios.defaults.baseURL = 'https://d8pokjfm88zqq.cloudfront.net';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>

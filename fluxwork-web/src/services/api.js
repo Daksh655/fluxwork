@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://fluxwork-backend-env.eba-quyayh3f.eu-north-1.elasticbeanstalk.com',
+    baseURL: 'https://d8pokjfm88zqq.cloudfront.net'
 });
 
 api.interceptors.request.use(
     (config) => {
         const storedUser = localStorage.getItem('user');
-        console.log("🛠️ [REACT] Checking Local Storage for User:", storedUser);
+        console.log("in React: Checking Local Storage for User:", storedUser);
 
         if (storedUser) {
             const user = JSON.parse(storedUser);
