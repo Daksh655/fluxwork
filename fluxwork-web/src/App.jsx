@@ -7,6 +7,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
 function ProtectedRoute({ children }) {
     const { user, loading } = useContext(AuthContext);
@@ -29,6 +30,7 @@ function App() {
                     </ProtectedRoute>
                 }>
                     <Route path="dashboard" element={<DashboardPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
                 </Route>
             </Routes>
     );

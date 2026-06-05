@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { getAllBoards, createBoard } from "../services/boardService";
 
-function Sidebar({ activeBoardId, setActiveBoardId }) {
+function Sidebar({ activeBoardId, setActiveBoardId,
+                     sidebarOpen, setSidebarOpen }) {
     const [boards, setBoards] = useState([]);
 
     // UI State for sleek creation
@@ -61,7 +62,27 @@ function Sidebar({ activeBoardId, setActiveBoardId }) {
     };
 
     return (
-        <aside className="w-64 bg-gray-950 border-r border-gray-800 flex flex-col hidden md:flex relative">
+        <>
+            {sidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
+            <aside
+                className={`
+                fixed md:relative
+                z-50 md:z-auto
+                w-64 h-full
+                bg-gray-950 border-r border-gray-800
+                flex flex-col
+                transform transition-transform duration-300
+                ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
+                md:translate-x-0
+            `}
+            >
+
             <div className="h-20 flex flex-col justify-center px-6 border-b border-gray-800">
                 <h1 className="text-xl font-bold text-white tracking-wider">
                     Flux<span className="text-blue-500">Work</span>
@@ -121,6 +142,7 @@ function Sidebar({ activeBoardId, setActiveBoardId }) {
                 </div>
             )}
         </aside>
+            </>
     );
 }
 
