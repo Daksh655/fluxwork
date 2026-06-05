@@ -29,7 +29,7 @@ export function AuthProvider({ children }) {
     const logout = () => {
 
         localStorage.removeItem("user"); // Clear the storage
-        window.location.href = "/login";  // force a full page reload to wipe all React memory
+        window.location.href = "/";  // force a full page reload to wipe all React memory
     };
 
     if (loading) return <div className="h-screen bg-gray-950 text-white flex items-center justify-center">Loading...</div>;
