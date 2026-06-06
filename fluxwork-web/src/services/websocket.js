@@ -6,7 +6,7 @@ let stompClient = null;
 export const connectWebSocket = (onMessageReceived) => {
 
     const socket = new SockJS(
-        "http://localhost:5000/ws"
+        "https://d8pokjfm88zqq.cloudfront.net/ws"
     );
 
     stompClient = new Client({
