@@ -12,6 +12,7 @@ import { ThemeProvider } from "./context/ThemeContext.jsx";
 axios.defaults.baseURL = 'https://d8pokjfm88zqq.cloudfront.net';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+
     <React.StrictMode>
         <BrowserRouter>
             <ThemeProvider>
