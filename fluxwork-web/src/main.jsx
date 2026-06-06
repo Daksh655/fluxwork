@@ -9,7 +9,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 // Force all Axios requests to point to the Spring Boot server
-axios.defaults.baseURL = 'https://d8pokjfm88zqq.cloudfront.net/ws';
+axios.defaults.baseURL = 'https://d8pokjfm88zqq.cloudfront.net';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
