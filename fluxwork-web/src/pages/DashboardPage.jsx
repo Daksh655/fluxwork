@@ -4,6 +4,10 @@ import api from "../services/api";
 import { getAllTasks } from "../services/taskService";
 import TaskColumn from "../components/TaskColumn";
 import CreateTaskModal from "../components/CreateTaskModal";
+import {
+    connectWebSocket,
+    disconnectWebSocket
+} from "../services/websocket";
 
 function DashboardPage() {
     const [tasks, setTasks] = useState([]);
@@ -13,24 +17,61 @@ function DashboardPage() {
     const { activeBoardId } = useOutletContext();
 
     async function fetchTasks() {
-        if (!activeBoardId) {
-            setTasks([]);
-            return;
-        }
-        try {
-            const taskArray = await getAllTasks();
-            const filteredData = (taskArray || []).filter(
-                task => String(task.boardId) === String(activeBoardId)
-            );
-            setTasks(filteredData);
-        } catch (error) {
-            console.error("Failed to fetch tasks:", error);
-        }
+
+        console.log("Current Board:", activeBoardId);
+
+        const taskArray = await getAllTasks();
+
+        console.log("ALL TASKS:", taskArray);
+
+        const filteredData = (taskArray || []).filter(
+            task => String(task.boardId) === String(activeBoardId)
+        );
+
+        console.log("FILTERED TASKS:", filteredData);
+
+        setTasks(filteredData);
     }
+
+
+    // async function fetchTasks() {
+    //
+    //     console.log(
+    //         "Current Board:",
+    //         activeBoardId
+    //     );
+    //
+    //     if (!activeBoardId) {
+    //         setTasks([]);
+    //         return;
+    //     }
+    //     try {
+    //         const taskArray = await getAllTasks();
+    //         const filteredData = (taskArray || []).filter(
+    //             task => String(task.boardId) === String(activeBoardId)
+    //         );
+    //         setTasks(filteredData);
+    //     } catch (error) {
+    //         console.error("Failed to fetch tasks:", error);
+    //     }
+    // }
 
     useEffect(() => {
         fetchTasks();
     }, [activeBoardId]);
+
+    useEffect(() => {
+
+        connectWebSocket(() => {
+            console.log("🔄 Refreshing tasks...");
+            fetchTasks();
+        });
+
+        return () => {
+            disconnectWebSocket();
+        };
+
+    }, []);
 
     const handleSubmitTask = async (taskDataFromModal) => {
         try {

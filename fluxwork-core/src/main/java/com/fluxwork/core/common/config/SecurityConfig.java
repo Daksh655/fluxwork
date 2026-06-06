@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**",
                                         "/api/health",
+                                        "/ws/**",
                                         "/"
                         ).permitAll() // Login/Register are public
                         .anyRequest().authenticated() // 🔒 Everything else is locked!

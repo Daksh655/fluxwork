@@ -4,10 +4,12 @@ import com.fluxwork.core.workflow.board.entity.BoardEntity;
 import com.fluxwork.core.workflow.board.repository.BoardRepository;
 import com.fluxwork.core.workflow.task.dto.TaskRequest;
 import com.fluxwork.core.workflow.task.dto.TaskResponse;
+import com.fluxwork.core.workflow.task.dto.TaskUpdateMessage;
 import com.fluxwork.core.workflow.task.entity.TaskEntity;
 import com.fluxwork.core.workflow.task.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final BoardRepository boardRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public TaskResponse createTask(TaskRequest request, String userEmail) {
         BoardEntity board = boardRepository.findById(request.getBoardId())
@@ -36,6 +39,15 @@ public class TaskService {
         task.setBoard(board);
 
         TaskEntity savedTask = taskRepository.save(task);
+
+        messagingTemplate.convertAndSend(
+                "/topic/tasks",
+                new TaskUpdateMessage(
+                        "TASK_CREATED",
+                        savedTask.getId()
+                )
+        );
+
         return mapToResponse(savedTask);
     }
 
@@ -54,6 +66,9 @@ public class TaskService {
     }
 
     public TaskResponse updateTaskStatus(Long taskId, String status, String userEmail) {
+
+        System.out.println("🔥 UPDATE TASK STATUS METHOD HIT");
+
         TaskEntity task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
 
@@ -62,7 +77,19 @@ public class TaskService {
         }
 
         task.setStatus(status);
+
         TaskEntity updatedTask = taskRepository.save(task);
+
+        System.out.println("🚀 BROADCASTING TASK UPDATE");
+
+        messagingTemplate.convertAndSend(
+                "/topic/tasks",
+                new TaskUpdateMessage(
+                        "STATUS_CHANGED",
+                        updatedTask.getId()
+                )
+        );
+
         return mapToResponse(updatedTask);
     }
 
@@ -85,6 +112,13 @@ public class TaskService {
         task.setBoard(board);
 
         TaskEntity updatedTask = taskRepository.save(task);
+        messagingTemplate.convertAndSend(
+                "/topic/tasks",
+                new TaskUpdateMessage(
+                        "TASK_UPDATED",
+                        updatedTask.getId()
+                )
+        );
         return mapToResponse(updatedTask);
     }
 
@@ -95,7 +129,18 @@ public class TaskService {
         if (!task.getBoard().getUser().getEmail().equals(userEmail)) {
             throw new RuntimeException("Unauthorized action");
         }
+
+        Long deletedTaskId = task.getId();
+
         taskRepository.delete(task);
+
+        messagingTemplate.convertAndSend(
+                "/topic/tasks",
+                new TaskUpdateMessage(
+                        "TASK_DELETED",
+                        deletedTaskId
+                )
+        );
     }
 
     private TaskResponse mapToResponse(TaskEntity task) {

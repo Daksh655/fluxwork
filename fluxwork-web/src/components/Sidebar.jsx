@@ -16,7 +16,15 @@ function Sidebar({ activeBoardId, setActiveBoardId,
                 const data = await getAllBoards();
                 setBoards(data);
                 if (data.length > 0 && !activeBoardId) {
+
                     setActiveBoardId(data[0].id);
+
+                    localStorage.setItem(
+                        "activeBoardId",
+                        data[0].id
+                    );
+
+                    console.log("SETTING BOARD:", data[0].id);
                 }
             } catch (error) {
                 console.error("Failed to load boards:", error);
@@ -47,7 +55,16 @@ function Sidebar({ activeBoardId, setActiveBoardId,
             setBoards(freshBoards);
 
             if (freshBoards.length > 0) {
-                setActiveBoardId(freshBoards[freshBoards.length - 1].id);
+
+                const newBoardId =
+                    freshBoards[freshBoards.length - 1].id;
+
+                setActiveBoardId(newBoardId);
+
+                localStorage.setItem(
+                    "activeBoardId",
+                    newBoardId
+                );
             }
 
             // Reset UI and show success toast!
@@ -122,7 +139,16 @@ function Sidebar({ activeBoardId, setActiveBoardId,
                     {(boards || []).map((board) => (
                         <button
                             key={board.id}
-                            onClick={() => setActiveBoardId(board.id)}
+                            onClick={() => {
+
+                                setActiveBoardId(board.id);
+
+                                localStorage.setItem(
+                                    "activeBoardId",
+                                    board.id
+                                );
+
+                            }}
                             className={`w-full text-left px-4 py-2 rounded-lg transition text-sm font-medium truncate ${
                                 activeBoardId === board.id
                                     ? "bg-blue-600/10 text-blue-400 border border-blue-500/20"

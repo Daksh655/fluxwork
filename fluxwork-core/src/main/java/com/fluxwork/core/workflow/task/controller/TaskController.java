@@ -42,8 +42,10 @@ public class TaskController {
             @RequestBody UpdateTaskStatusRequest request,
             Principal principal
     ) {
+        System.out.println("CONTROLLER HIT");
+
         TaskResponse response = taskService.updateTaskStatus(taskId, request.getStatus(), principal.getName());
-        return ApiResponse.success(response, "Task status updated successfully");
+        return ApiResponse.success(response, "STATUS ENDPOINT HIT");
     }
 
     @GetMapping

@@ -5,7 +5,9 @@ import Sidebar from "../components/Sidebar";
 
 function MainLayout() {
 
-    const [activeBoardId, setActiveBoardId] = useState(null);
+    const [activeBoardId, setActiveBoardId] = useState(
+        localStorage.getItem("activeBoardId")
+    );
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
