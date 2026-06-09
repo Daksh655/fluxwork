@@ -9,11 +9,17 @@ export function AuthProvider({ children }) {
     const navigate = useNavigate();
 
 
-    useEffect(() => {  // Check if user exists on initial load
+    useEffect(() => {
+        console.log("AUTH CONTEXT LOADED");
+
         const storedUser = localStorage.getItem("user");
+
+        console.log("STORED USER:", storedUser);
+
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
+
         setLoading(false);
     }, []);
 

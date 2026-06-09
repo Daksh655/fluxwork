@@ -14,24 +14,33 @@ function Sidebar({ activeBoardId, setActiveBoardId,
         async function loadBoards() {
             try {
                 const data = await getAllBoards();
-                setBoards(data);
-                if (data.length > 0 && !activeBoardId) {
 
-                    setActiveBoardId(data[0].id);
+                console.log(
+                    "BOARDS API RAW:",
+                    JSON.stringify(data)
+                );
 
-                    localStorage.setItem(
-                        "activeBoardId",
-                        data[0].id
-                    );
+                console.log("BOARDS FROM API:", data);
 
-                    console.log("SETTING BOARD:", data[0].id);
+                if (data.length > 0) {
+                    setBoards(data);
+
+                    if (!activeBoardId) {
+                        setActiveBoardId(data[0].id);
+                        localStorage.setItem(
+                            "activeBoardId",
+                            data[0].id
+                        );
+                    }
                 }
+
             } catch (error) {
-                console.error("Failed to load boards:", error);
+                console.error(error);
             }
         }
+
         loadBoards();
-    }, [activeBoardId, setActiveBoardId]);
+    }, []);
 
     // Show a sleek notification for 3 seconds
     const showNotification = (message) => {
@@ -77,6 +86,8 @@ function Sidebar({ activeBoardId, setActiveBoardId,
             alert("Failed to create board. Check your console!");
         }
     };
+
+    console.log("RENDER BOARDS:", boards);
 
     return (
         <>

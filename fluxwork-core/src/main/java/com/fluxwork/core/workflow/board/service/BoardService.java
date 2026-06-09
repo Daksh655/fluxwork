@@ -48,9 +48,20 @@ public class BoardService {
 
     // this is to find all the board form DB
     public List<BoardResponse> getAllBoards(String userEmail) {
+
+        System.out.println("USER EMAIL = " + userEmail);
+
         return boardRepository.findAll().stream()
 
-                .filter(board -> board.getUser() != null && board.getUser().getEmail().equals(userEmail))
+                .filter(board -> {
+                    System.out.println(
+                            "BOARD USER = " +
+                                    board.getUser().getEmail()
+                    );
+
+                    return board.getUser() != null &&
+                            board.getUser().getEmail().equals(userEmail);
+                })
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

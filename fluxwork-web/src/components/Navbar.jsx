@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 function Navbar({ toggleSidebar }) {
     const { user, logout } = useContext(AuthContext);
+    console.log("NAVBAR USER:", user);
 
     return (
         <header className="h-20 flex items-center justify-between px-4 md:px-8 border-b border-gray-800 bg-gray-950/50 backdrop-blur-md">

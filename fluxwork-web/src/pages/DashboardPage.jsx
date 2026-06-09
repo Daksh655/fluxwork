@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import api from "../services/api";
 import { getAllTasks } from "../services/taskService";
@@ -16,21 +16,40 @@ function DashboardPage() {
 
     const { activeBoardId } = useOutletContext();
 
-    async function fetchTasks() {
+    const activeBoardRef = useRef(activeBoardId);
 
-        console.log("Current Board:", activeBoardId);
+    useEffect(() => {
+        activeBoardRef.current = activeBoardId;
+    }, [activeBoardId]);
 
-        const taskArray = await getAllTasks();
 
-        console.log("ALL TASKS:", taskArray);
+    async function fetchTasks(boardId = activeBoardRef.current) {
 
-        const filteredData = (taskArray || []).filter(
-            task => String(task.boardId) === String(activeBoardId)
-        );
+        if (!boardId) {
+            setTasks([]);
+            return;
+        }
 
-        console.log("FILTERED TASKS:", filteredData);
+        try {
 
-        setTasks(filteredData);
+            const taskArray = await getAllTasks();
+
+            const filteredData = (taskArray || []).filter(
+                task => String(task.boardId) === String(boardId)
+            );
+
+            console.log(
+                "BOARD:",
+                boardId,
+                "TASKS:",
+                filteredData
+            );
+
+            setTasks(filteredData);
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
 
@@ -57,14 +76,21 @@ function DashboardPage() {
     // }
 
     useEffect(() => {
-        fetchTasks();
+        if (activeBoardId) {
+            fetchTasks();
+        }
     }, [activeBoardId]);
 
     useEffect(() => {
 
         connectWebSocket(() => {
-            console.log("🔄 Refreshing tasks...");
-            fetchTasks();
+
+            console.log(
+                "🔄 WS Refresh Board:",
+                activeBoardRef.current
+            );
+
+            fetchTasks(activeBoardRef.current);
         });
 
         return () => {

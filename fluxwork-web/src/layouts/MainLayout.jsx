@@ -8,6 +8,7 @@ function MainLayout() {
     const [activeBoardId, setActiveBoardId] = useState(
         localStorage.getItem("activeBoardId")
     );
+    console.log("ACTIVE BOARD:", activeBoardId);
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
