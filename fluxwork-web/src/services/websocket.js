@@ -6,7 +6,7 @@ let stompClient = null;
 export const connectWebSocket = (onMessageReceived) => {
 
     const socket = new SockJS(
-        "https://d8pokjfm88zqq.cloudfront.net/ws"
+        "https://fluxwork-backend.onrender.com/ws"
     );
 
     stompClient = new Client({

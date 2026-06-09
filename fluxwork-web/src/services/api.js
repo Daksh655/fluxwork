@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://d8pokjfm88zqq.cloudfront.net'
+    baseURL: 'https://fluxwork-backend.onrender.com'
 });
 
 api.interceptors.request.use(
