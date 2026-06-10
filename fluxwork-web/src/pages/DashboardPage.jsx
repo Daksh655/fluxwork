@@ -17,6 +17,7 @@ function DashboardPage() {
     const { activeBoardId } = useOutletContext();
 
     const activeBoardRef = useRef(activeBoardId);
+    const fetchIdRef = useRef(0);
 
     useEffect(() => {
         activeBoardRef.current = activeBoardId;
@@ -30,9 +31,15 @@ function DashboardPage() {
             return;
         }
 
+        const currentFetchId = ++fetchIdRef.current;
+
         try {
 
             const taskArray = await getAllTasks();
+
+            if (currentFetchId !== fetchIdRef.current) {
+                return;
+            }
 
             const filteredData = (taskArray || []).filter(
                 task => String(task.boardId) === String(boardId)
