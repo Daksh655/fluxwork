@@ -40,6 +40,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: fluxwork-backend
           environment_name: Fluxwork-backend-env
-          region: eu-north-1
+          region: ap-south-1
           version_label: github-${{ github.run_number }}
           deployment_package: fluxwork-core/deploy/deploy.zip
